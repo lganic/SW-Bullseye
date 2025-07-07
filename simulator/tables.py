@@ -1,5 +1,3 @@
-
-
 GUNS = [
     "Light Autocannon",
     "Rotary Autocannon",
