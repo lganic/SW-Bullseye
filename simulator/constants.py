@@ -1,0 +1,1 @@
+WIND_SCALAR = .1
