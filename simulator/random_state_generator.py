@@ -62,6 +62,7 @@ class RandomStateGenerator:
         wind_direction          = random_heading()
 
         return {
+            'gun_name':                gun_in_use,
             'muzzle_velocity':         muzzle_velocity,
             'projectile_drag':         projectile_drag,
             'gravity':                 gravity,
