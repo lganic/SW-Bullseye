@@ -33,3 +33,13 @@ GRAVITY = {
     "Artillery Cannon": 0.5,
     "Bertha Cannon": 0.5,
 }
+
+
+APPROX_MAX_DISTANCE = {
+    "Light Autocannon": 1000,
+    "Rotary Autocannon": 1000,
+    "Heavy Autocannon": 1000,
+    "Battle Cannon": 4500,
+    "Artillery Cannon": 6500,
+    "Bertha Cannon": 7500,
+}
