@@ -2,8 +2,8 @@ from typing import Dict
 
 import math
 
-from .base_sim import single_axis_positioning
-from .constants import WIND_SCALAR
+from base_sim import single_axis_positioning
+from constants import WIND_SCALAR
 
 class State:
 

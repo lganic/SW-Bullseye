@@ -1,8 +1,8 @@
 from typing import Dict, Tuple
 import math
 
-from .constants import WIND_SCALAR
-from .base_sim import single_axis_positioning
+from constants import WIND_SCALAR
+from base_sim import single_axis_positioning
 
 # The forward kinematics equations are based on the work of smithy3141 on the Stormworks Discord
 # Also big thanks to Trapdoor on the Stormworks Discord for their help working wind forces in
