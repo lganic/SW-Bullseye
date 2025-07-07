@@ -83,5 +83,6 @@ class RandomStateGenerator:
             'wind_direction':          wind_direction,
             't_x':                     t_x,
             't_y':                     t_y,
-            't_z':                     t_z
+            't_z':                     t_z,
+            'target':                  (t_x, t_y, t_z)
         }
