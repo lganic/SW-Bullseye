@@ -2,13 +2,10 @@ from typing import Dict, Tuple
 import math
 
 from .constants import WIND_SCALAR
+from .base_sim import single_axis_positioning
 
 # The forward kinematics equations are based on the work of smithy3141 on the Stormworks Discord
 # Also big thanks to Trapdoor on the Stormworks Discord for their help working wind forces in
-
-def single_axis_positioning(a, i, q, d, t):
-
-    return (a / 60) * (i + q / d)- (q * t / (60 * d))
 
 def generate_forward_ballistics(firing_state: Dict[str, float], az: float, el: float, time: float) -> Tuple[float, float, float]:
 
