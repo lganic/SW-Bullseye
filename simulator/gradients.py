@@ -23,10 +23,9 @@ class State:
         self.my_velocity             = state['my_velocity']
         self.wind_velocity           = state['wind_velocity']
         self.wind_direction          = state['wind_direction']
-
-        self.t_x = self.target_distance * math.cos(math.radians(self.heading))
-        self.t_y = self.target_altitude
-        self.t_z = self.target_distance * math.sin(math.radians(self.heading))
+        self.t_x                     = state['t_x']
+        self.t_y                     = state['t_y']
+        self.t_z                     = state['t_z']
 
         w = WIND_SCALAR * self.wind_velocity
 

@@ -1,5 +1,6 @@
 from random import random, normalvariate, choice
 from typing import Dict
+import math
 
 from tables import GUNS, MUZZLE_VELOCITY, PROJECTILE_DRAG, GRAVITY, APPROX_MAX_DISTANCE
 
@@ -61,6 +62,11 @@ class RandomStateGenerator:
         wind_velocity           = random_wind()
         wind_direction          = random_heading()
 
+        t_x = target_distance * math.cos(math.radians(heading))
+        t_y = target_altitude
+        t_z = target_distance * math.sin(math.radians(heading))
+
+
         return {
             'gun_name':                gun_in_use,
             'muzzle_velocity':         muzzle_velocity,
@@ -74,5 +80,8 @@ class RandomStateGenerator:
             'target_velocity':         target_velocity,
             'my_velocity':             my_velocity,
             'wind_velocity':           wind_velocity,
-            'wind_direction':          wind_direction
+            'wind_direction':          wind_direction,
+            't_x':                     t_x,
+            't_y':                     t_y,
+            't_z':                     t_z
         }
