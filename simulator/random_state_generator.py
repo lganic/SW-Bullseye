@@ -1,29 +1,36 @@
 from random import random, normalvariate, choice
+from typing import Dict
+
 from tables import GUNS, MUZZLE_VELOCITY, PROJECTILE_DRAG, GRAVITY, APPROX_MAX_DISTANCE
 
 # Some random wrapper functions to make code easier to read
 
-def random_heading():
+def random_heading() -> float:
     # Return a random heading between 0 and 360
 
     return 360 * random()
 
-def random_velocity(std_dev: float):
+def random_velocity(std_dev: float) -> float:
     # Return a random velocity of a target
 
     return normalvariate(0, std_dev)
 
-def random_altitude(std_dev: float):
+def random_altitude(std_dev: float) -> float:
     # Return a random altitude of a target
 
     return normalvariate(0, std_dev)
 
-def random_distance(maximum: float, std_dev_scalar: float):
+def random_distance(maximum: float, std_dev_scalar: float) -> float:
     # Return a random distance based on a maximum distance, and a std dev scalar
 
     std_dev_in_use = maximum * std_dev_scalar
 
     return normalvariate(0, std_dev_in_use)
+
+def random_wind():
+    # Return a random amount of wind between 0 and 1
+
+    return random()
 
 class RandomStateGenerator:
     def __init__(self, distance_deviation_scalar = .1, velocity_std_dev = 30, altitude_std_dev = 100):
@@ -32,7 +39,7 @@ class RandomStateGenerator:
         self.velocity_std_dev = velocity_std_dev
         self.altitude_std_dev = altitude_std_dev
     
-    def generate(self):
+    def generate(self) -> Dict[str, float]:
 
         gun_in_use              = choice(GUNS)
 
@@ -51,6 +58,9 @@ class RandomStateGenerator:
         target_velocity         = random_velocity(self.velocity_std_dev)
         my_velocity             = random_velocity(self.velocity_std_dev)
 
+        wind_velocity           = random_wind()
+        wind_direction          = random_heading()
+
         return {
             'muzzle_velocity':         muzzle_velocity,
             'projectile_drag':         projectile_drag,
@@ -61,5 +71,7 @@ class RandomStateGenerator:
             'target_distance':         target_distance,
             'target_altitude':         target_altitude,
             'target_velocity':         target_velocity,
-            'my_velocity':             my_velocity
+            'my_velocity':             my_velocity,
+            'wind_velocity':           wind_velocity,
+            'wind_direction':          wind_direction
         }
