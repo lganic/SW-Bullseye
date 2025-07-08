@@ -2,7 +2,8 @@ from typing import Dict
 
 import math
 
-from base_sim import single_axis_positioning
+from base_sim import single_axis_positioning, split_to_vector
+from simulator import offset_target_position
 from constants import WIND_SCALAR
 
 class State:
@@ -44,12 +45,14 @@ class State:
         k = 1 - self.projectile_drag
         a = k * (1 - k ** time) / self.projectile_drag
 
+        target_offset_x, target_offset_z = offset_target_position(self.state, time)
+
         total = 0
 
         # Re-use single axis positioning, since its the same function due to the chain rule
         base = single_axis_positioning(a, i_x, self.w_x, self.projectile_drag, time)
 
-        base -= self.t_x
+        base -= self.t_x + target_offset_x
 
         base *= (-a / 60) * self.muzzle_velocity * math.cos(el) * math.sin(az)
 
@@ -58,7 +61,7 @@ class State:
         # Re-use single axis positioning, since its the same function due to the chain rule
         base = single_axis_positioning(a, i_z, self.w_z, self.projectile_drag, time)
 
-        base -= self.t_z
+        base -= self.t_z + target_offset_z
 
         base *= (a / 60) * self.muzzle_velocity * math.cos(el) * math.cos(az)
 
@@ -74,12 +77,14 @@ class State:
         k = 1 - self.projectile_drag
         a = k * (1 - k ** time) / self.projectile_drag
 
+        target_offset_x, target_offset_z = offset_target_position(self.state, time)
+
         total = 0
 
         # Re-use single axis positioning, since its the same function due to the chain rule
         base = single_axis_positioning(a, i_x, self.w_x, self.projectile_drag, time)
 
-        base -= self.t_x
+        base -= self.t_x + target_offset_x
 
         base *= (-a / 60) * self.muzzle_velocity * math.sin(el) * math.cos(az)
 
@@ -97,7 +102,7 @@ class State:
         # Re-use single axis positioning, since its the same function due to the chain rule
         base = single_axis_positioning(a, i_z, self.w_z, self.projectile_drag, time)
 
-        base -= self.t_z
+        base -= self.t_z + target_offset_z
 
         base *= (-a / 60) * self.muzzle_velocity * math.sin(el) * math.sin(az)
 
@@ -114,6 +119,9 @@ class State:
         k = 1 - self.projectile_drag
         a = k * (1 - k ** time) / self.projectile_drag
 
+        target_offset_x, target_offset_z = offset_target_position(self.state, time)
+        target_velocity_x, target_velocity_z = split_to_vector(self.target_velocity / 60, self.target_velocity_heading)
+
         def part(i, q):
             return (-k * (i + q / self.projectile_drag) * math.log(k) * (k ** time) - q) / (60 * self.projectile_drag)
 
@@ -122,9 +130,9 @@ class State:
         # Re-use single axis positioning, since its the same function due to the chain rule
         base = single_axis_positioning(a, i_x, self.w_x, self.projectile_drag, time)
 
-        base -= self.t_x
+        base -= self.t_x + target_offset_x
 
-        base *= part(i_x, self.w_x)
+        base *= part(i_x, self.w_x) - target_velocity_x
 
         total += base
 
@@ -140,9 +148,9 @@ class State:
         # Re-use single axis positioning, since its the same function due to the chain rule
         base = single_axis_positioning(a, i_z, self.w_z, self.projectile_drag, time)
 
-        base -= self.t_z
+        base -= self.t_z + target_offset_z
 
-        base *= part(i_z, self.w_z)
+        base *= part(i_z, self.w_z) - target_velocity_z
 
         total += base
 
