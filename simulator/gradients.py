@@ -3,7 +3,7 @@ from typing import Dict
 import math
 
 from base_sim import single_axis_positioning, split_to_vector
-from simulator import offset_target_position
+from sim import offset_target_position
 from constants import WIND_SCALAR
 
 class State:
@@ -40,8 +40,10 @@ class State:
 
     def partial_az(self, az: float, el: float, time: float):
 
-        i_x = self.muzzle_velocity * math.cos(el) * math.cos(az)
-        i_z = self.muzzle_velocity * math.cos(el) * math.sin(az)
+        myvel_x, myvel_z = split_to_vector(self.my_velocity, self.my_velocity_heading)
+
+        i_x = self.muzzle_velocity * math.cos(el) * math.cos(az) + myvel_x
+        i_z = self.muzzle_velocity * math.cos(el) * math.sin(az) + myvel_z
         k = 1 - self.projectile_drag
         a = k * (1 - k ** time) / self.projectile_drag
 
@@ -56,7 +58,6 @@ class State:
 
         base *= (-a / 60) * self.muzzle_velocity * math.cos(el) * math.sin(az)
 
-        print('paz', base)
         total += base
 
         # Re-use single axis positioning, since its the same function due to the chain rule
@@ -65,7 +66,6 @@ class State:
         base -= self.t_z + target_offset_z
 
         base *= (a / 60) * self.muzzle_velocity * math.cos(el) * math.cos(az)
-        print('paz', base)
 
         total += base
 
@@ -73,9 +73,12 @@ class State:
 
     def partial_el(self, az: float, el: float, time: float):
 
-        i_x = self.muzzle_velocity * math.cos(el) * math.cos(az)
+        myvel_x, myvel_z = split_to_vector(self.my_velocity, self.my_velocity_heading)
+
+        i_x = self.muzzle_velocity * math.cos(el) * math.cos(az) + myvel_x
+        i_z = self.muzzle_velocity * math.cos(el) * math.sin(az) + myvel_z
+
         i_y = self.muzzle_velocity * math.sin(el)
-        i_z = self.muzzle_velocity * math.cos(el) * math.sin(az)
         k = 1 - self.projectile_drag
         a = k * (1 - k ** time) / self.projectile_drag
 
@@ -89,7 +92,6 @@ class State:
         base -= self.t_x + target_offset_x
 
         base *= (-a / 60) * self.muzzle_velocity * math.sin(el) * math.cos(az)
-        print('pel', base)
 
         total += base
 
@@ -100,7 +102,6 @@ class State:
 
         base *= (a / 60) * self.muzzle_velocity * math.cos(el)
 
-        print('pel', base)
         total += base
 
         # Re-use single axis positioning, since its the same function due to the chain rule
@@ -110,25 +111,27 @@ class State:
 
         base *= (-a / 60) * self.muzzle_velocity * math.sin(el) * math.sin(az)
 
-        print('pel', base)
         total += base
 
         return total
     
     def partial_time(self, az: float, el: float, time: float):
 
+        myvel_x, myvel_z = split_to_vector(self.my_velocity, self.my_velocity_heading)
 
-        i_x = self.muzzle_velocity * math.cos(el) * math.cos(az)
+        i_x = self.muzzle_velocity * math.cos(el) * math.cos(az) + myvel_x
+        i_z = self.muzzle_velocity * math.cos(el) * math.sin(az) + myvel_z
+
         i_y = self.muzzle_velocity * math.sin(el)
-        i_z = self.muzzle_velocity * math.cos(el) * math.sin(az)
+
         k = 1 - self.projectile_drag
         a = k * (1 - k ** time) / self.projectile_drag
 
         target_offset_x, target_offset_z = offset_target_position(self.state, time)
-        target_velocity_x, target_velocity_z = split_to_vector(self.target_velocity / 60, self.target_velocity_heading)
+        target_velocity_x, target_velocity_z = split_to_vector(self.target_velocity, self.target_velocity_heading)
 
         def part(i, q):
-            return (-k * (i + q / self.projectile_drag) * math.log(k) * (k ** time) - q) / (60 * self.projectile_drag)
+            return (-k * (i + q / self.projectile_drag) * math.log(k) * math.pow(k, time) - q) / (60 * self.projectile_drag)
 
         total = 0
 
