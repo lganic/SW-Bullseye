@@ -53,7 +53,7 @@ def calculate_error(firing_state, current_solution):
 
     return math.sqrt(sum([math.pow(a - b, 2) for a, b in zip(position, offset_target)]))
 
-def calculate_firing_solution(firing_state: Dict[str, float], learning_rate = .00001, tolerance = .1, max_iterations = 10000, verbose = False):
+def calculate_firing_solution(firing_state: Dict[str, float], learning_rate = .0001, tolerance = .1, max_iterations = 10000, verbose = False):
 
     current_state = State(firing_state)
 

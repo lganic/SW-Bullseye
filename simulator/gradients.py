@@ -40,7 +40,7 @@ class State:
 
     def partial_az(self, az: float, el: float, time: float):
 
-        myvel_x, myvel_z = split_to_vector(self.my_velocity, self.my_velocity_heading)
+        myvel_x, myvel_z = split_to_vector(self.my_velocity_heading, self.my_velocity)
 
         i_x = self.muzzle_velocity * math.cos(el) * math.cos(az) + myvel_x
         i_z = self.muzzle_velocity * math.cos(el) * math.sin(az) + myvel_z
@@ -73,7 +73,7 @@ class State:
 
     def partial_el(self, az: float, el: float, time: float):
 
-        myvel_x, myvel_z = split_to_vector(self.my_velocity, self.my_velocity_heading)
+        myvel_x, myvel_z = split_to_vector(self.my_velocity_heading, self.my_velocity)
 
         i_x = self.muzzle_velocity * math.cos(el) * math.cos(az) + myvel_x
         i_z = self.muzzle_velocity * math.cos(el) * math.sin(az) + myvel_z
@@ -117,7 +117,7 @@ class State:
     
     def partial_time(self, az: float, el: float, time: float):
 
-        myvel_x, myvel_z = split_to_vector(self.my_velocity, self.my_velocity_heading)
+        myvel_x, myvel_z = split_to_vector(self.my_velocity_heading, self.my_velocity)
 
         i_x = self.muzzle_velocity * math.cos(el) * math.cos(az) + myvel_x
         i_z = self.muzzle_velocity * math.cos(el) * math.sin(az) + myvel_z
@@ -128,7 +128,7 @@ class State:
         a = k * (1 - k ** time) / self.projectile_drag
 
         target_offset_x, target_offset_z = offset_target_position(self.state, time)
-        target_velocity_x, target_velocity_z = split_to_vector(self.target_velocity, self.target_velocity_heading)
+        target_velocity_x, target_velocity_z = split_to_vector(self.target_velocity_heading, self.target_velocity)
 
         def part(i, q):
             return (-k * (i + q / self.projectile_drag) * math.log(k) * math.pow(k, time) - q) / (60 * self.projectile_drag)

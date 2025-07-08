@@ -34,7 +34,7 @@ def random_wind():
     return random()
 
 class RandomStateGenerator:
-    def __init__(self, distance_deviation_scalar = .1, velocity_std_dev = 30, altitude_std_dev = 100):
+    def __init__(self, distance_deviation_scalar = .5, velocity_std_dev = 30, altitude_std_dev = 100):
 
         self.distance_deviation_scalar = distance_deviation_scalar
         self.velocity_std_dev = velocity_std_dev
