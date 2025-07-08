@@ -44,7 +44,7 @@ def offset_target_position(firing_state: Dict[str, float], time: float):
 
     velocity_x, velocity_z = split_to_vector(firing_state['target_velocity'], firing_state['target_velocity_heading'])
 
-    return velocity_x * time, velocity_z * time
+    return velocity_x * time / 60, velocity_z * time / 60
 
 if __name__ == '__main__':
 
