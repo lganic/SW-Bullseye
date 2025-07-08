@@ -7,6 +7,13 @@ from base_sim import single_axis_positioning
 # The forward kinematics equations are based on the work of smithy3141 on the Stormworks Discord
 # Also big thanks to Trapdoor on the Stormworks Discord for their help working wind forces in
 
+def split_to_vector(direction: float, magnitude: float):
+    '''
+    Direction in degrees. 
+    '''
+
+    return magnitude * math.cos(math.radians(direction)), magnitude * math.sin(math.radians(direction))
+
 def generate_forward_ballistics(firing_state: Dict[str, float], az: float, el: float, time: float) -> Tuple[float, float, float]:
 
     '''
@@ -28,9 +35,11 @@ def generate_forward_ballistics(firing_state: Dict[str, float], az: float, el: f
     w_x = -w * math.cos(wind_angle)
     w_z = -w * math.sin(wind_angle)
 
-    i_x = v * math.cos(el) * math.cos(az)
+    myvel_x, myvel_z = split_to_vector(firing_state['my_velocity'], firing_state['my_velocity_heading'])
+
+    i_x = v * math.cos(el) * math.cos(az) + myvel_x
     i_y = v * math.sin(el)
-    i_z = v * math.cos(el) * math.sin(az)
+    i_z = v * math.cos(el) * math.sin(az) + myvel_z
 
     x_pos = single_axis_positioning(a, i_x, w_x, d, time)
     y_pos = single_axis_positioning(a, i_y, g  , d, time)
@@ -38,6 +47,11 @@ def generate_forward_ballistics(firing_state: Dict[str, float], az: float, el: f
 
     return (x_pos, y_pos, z_pos)
 
+def offset_target_position(firing_state: Dict[str, float], time: float):
+
+    velocity_x, velocity_z = split_to_vector(firing_state['target_velocity'], firing_state['target_velocity_heading'])
+
+    return velocity_x * time, velocity_z * time
 
 if __name__ == '__main__':
 
