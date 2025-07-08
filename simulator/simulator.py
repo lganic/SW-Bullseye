@@ -7,13 +7,6 @@ from base_sim import single_axis_positioning
 # The forward kinematics equations are based on the work of smithy3141 on the Stormworks Discord
 # Also big thanks to Trapdoor on the Stormworks Discord for their help working wind forces in
 
-def split_to_vector(direction: float, magnitude: float):
-    '''
-    Direction in degrees. 
-    '''
-
-    return magnitude * math.cos(math.radians(direction)), magnitude * math.sin(math.radians(direction))
-
 def generate_forward_ballistics(firing_state: Dict[str, float], az: float, el: float, time: float) -> Tuple[float, float, float]:
 
     '''
