@@ -14,7 +14,7 @@ def random_heading() -> float:
 def random_velocity(std_dev: float) -> float:
     # Return a random velocity of a target
 
-    return normalvariate(0, std_dev)
+    return abs(normalvariate(0, std_dev))
 
 def random_altitude(std_dev: float) -> float:
     # Return a random altitude of a target
