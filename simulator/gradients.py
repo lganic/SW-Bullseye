@@ -2,9 +2,9 @@ from typing import Dict
 
 import math
 
-from base_sim import single_axis_positioning, split_to_vector
-from sim import offset_target_position
-from constants import WIND_SCALAR
+from .base_sim import single_axis_positioning, split_to_vector
+from .sim import offset_target_position
+from .constants import WIND_SCALAR
 
 class State:
 

@@ -1,8 +1,8 @@
 from typing import Dict
 import math
 
-from gradients import State
-from sim import generate_forward_ballistics, offset_target_position
+from .gradients import State
+from .sim import generate_forward_ballistics, offset_target_position
 
 def _vprint(v, p):
     if v:

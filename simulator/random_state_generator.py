@@ -2,7 +2,7 @@ from random import random, normalvariate, choice
 from typing import Dict
 import math
 
-from tables import GUNS, MUZZLE_VELOCITY, PROJECTILE_DRAG, GRAVITY, APPROX_MAX_DISTANCE
+from .tables import GUNS, MUZZLE_VELOCITY, PROJECTILE_DRAG, GRAVITY, APPROX_MAX_DISTANCE
 
 # Some random wrapper functions to make code easier to read
 
