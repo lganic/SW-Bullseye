@@ -1,4 +1,4 @@
-from . import simulator
+from . import sim
 from . import base_sim
 from . import constants
 from . import descent
