@@ -27,13 +27,14 @@ def _vprint(v, p):
 def calculate_inital_guess(firing_state):
 
     # Suuuuper lazy. But we just want a ballpark.
-    # Might change later. 
 
     az = math.radians(firing_state['heading'])
-    el = 0
+
+    # Estimate elevation, based on twice the ballistic prediction
+    el = math.asin(60 * firing_state['gravity'] * firing_state['target_distance'] / math.pow(firing_state['muzzle_velocity'], 2))
 
     # Assume straight line trajectory
-    time = 60 * (firing_state['target_distance'] / firing_state['muzzle_velocity'])
+    time = 2 * 60 * (firing_state['target_distance'] / firing_state['muzzle_velocity'])
 
     return az, el, time
 
@@ -45,13 +46,15 @@ def calculate_error(firing_state, current_solution):
 
     return math.sqrt(sum([math.pow(a - b, 2) for a, b in zip(position, firing_state['target'])]))
 
-def calculate_firing_solution(firing_state: Dict[str, float], learning_rate = .00001, tolerance = .1, max_iterations = 100000, verbose = False):
+def calculate_firing_solution(firing_state: Dict[str, float], learning_rate = .0001, tolerance = .1, max_iterations = 10, verbose = False):
 
     current_state = State(firing_state)
 
     _vprint(verbose, f'Calculating solution for: {firing_state["gun_name"]}')
 
     current_guess = calculate_inital_guess(firing_state)
+
+    print(f'Starting error: {calculate_error(firing_state, current_guess)}')
 
     error = math.inf
 

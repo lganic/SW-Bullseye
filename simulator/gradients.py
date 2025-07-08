@@ -56,6 +56,7 @@ class State:
 
         base *= (-a / 60) * self.muzzle_velocity * math.cos(el) * math.sin(az)
 
+        print('paz', base)
         total += base
 
         # Re-use single axis positioning, since its the same function due to the chain rule
@@ -64,6 +65,7 @@ class State:
         base -= self.t_z + target_offset_z
 
         base *= (a / 60) * self.muzzle_velocity * math.cos(el) * math.cos(az)
+        print('paz', base)
 
         total += base
 
@@ -87,6 +89,7 @@ class State:
         base -= self.t_x + target_offset_x
 
         base *= (-a / 60) * self.muzzle_velocity * math.sin(el) * math.cos(az)
+        print('pel', base)
 
         total += base
 
@@ -97,6 +100,7 @@ class State:
 
         base *= (a / 60) * self.muzzle_velocity * math.cos(el)
 
+        print('pel', base)
         total += base
 
         # Re-use single axis positioning, since its the same function due to the chain rule
@@ -106,6 +110,7 @@ class State:
 
         base *= (-a / 60) * self.muzzle_velocity * math.sin(el) * math.sin(az)
 
+        print('pel', base)
         total += base
 
         return total

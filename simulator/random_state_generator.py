@@ -26,7 +26,7 @@ def random_distance(maximum: float, std_dev_scalar: float) -> float:
 
     std_dev_in_use = maximum * std_dev_scalar
 
-    return normalvariate(0, std_dev_in_use)
+    return abs(normalvariate(std_dev_in_use, std_dev_in_use))
 
 def random_wind():
     # Return a random amount of wind between 0 and 1
@@ -65,7 +65,6 @@ class RandomStateGenerator:
         t_x = target_distance * math.cos(math.radians(heading))
         t_y = target_altitude
         t_z = target_distance * math.sin(math.radians(heading))
-
 
         return {
             'gun_name':                gun_in_use,
