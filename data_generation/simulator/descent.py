@@ -75,20 +75,20 @@ def calculate_firing_solution(firing_state: Dict[str, float], learning_rate = .0
 
         count += 1
         if count > max_iterations:
-            print(firing_state)
-            print("Failed to calculate for conditions:")
-            print(f'For gun: {firing_state["gun_name"]}')
-            print(f'Velocity: {firing_state["muzzle_velocity"]}')
-            print(f'Drag: {firing_state["projectile_drag"]}')
-            print()
-            print(f'Wind: {firing_state["wind_velocity"]} at direction: {firing_state["wind_direction"]}')
-            print()
-            print(f'Target is at:')
-            print(f'X: {firing_state["t_x"]}')
-            print(f'Y: {firing_state["t_y"]}')
-            print(f'Z: {firing_state["t_z"]}')
-            print()
-            print(f'Error: {error}')
+            _vprint(verbose, firing_state)
+            _vprint(verbose, "Failed to calculate for conditions:")
+            _vprint(verbose, f'For gun: {firing_state["gun_name"]}')
+            _vprint(verbose, f'Velocity: {firing_state["muzzle_velocity"]}')
+            _vprint(verbose, f'Drag: {firing_state["projectile_drag"]}')
+            _vprint(verbose, '')
+            _vprint(verbose, f'Wind: {firing_state["wind_velocity"]} at direction: {firing_state["wind_direction"]}')
+            _vprint(verbose, '')
+            _vprint(verbose, f'Target is at:')
+            _vprint(verbose, f'X: {firing_state["t_x"]}')
+            _vprint(verbose, f'Y: {firing_state["t_y"]}')
+            _vprint(verbose, f'Z: {firing_state["t_z"]}')
+            _vprint(verbose, '')
+            _vprint(verbose, f'Error: {error}')
             return 
 
         # Calculate gradients
@@ -109,7 +109,7 @@ def calculate_firing_solution(firing_state: Dict[str, float], learning_rate = .0
             error_increased_count += 1
 
             if error_increased_count > 10:
-                print('Increasing error detected, flipped time gradient')
+                _vprint(verbose, 'Increasing error detected, flipped time gradient')
                 flipped_time_gradient = True
                 time_gradient_scalar = -1
         else:
