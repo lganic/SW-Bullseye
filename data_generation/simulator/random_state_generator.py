@@ -40,9 +40,15 @@ class RandomStateGenerator:
         self.velocity_std_dev = velocity_std_dev
         self.altitude_std_dev = altitude_std_dev
     
-    def generate(self) -> Dict[str, float]:
+    def generate(self, force_use_gun = None) -> Dict[str, float]:
 
-        gun_in_use              = choice(GUNS)
+        if force_use_gun is None:
+            gun_in_use              = choice(GUNS)
+        else:
+            if force_use_gun not in choice:
+                raise KeyError(f'Selected gun is not valid. Valid choices are: {",".join(GUNS)}')
+            
+            gun_in_use = force_use_gun
 
         muzzle_velocity         = MUZZLE_VELOCITY[gun_in_use]
         projectile_drag         = PROJECTILE_DRAG[gun_in_use]
