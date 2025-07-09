@@ -34,11 +34,12 @@ def random_wind():
     return random()
 
 class RandomStateGenerator:
-    def __init__(self, distance_deviation_scalar = .5, velocity_std_dev = 30, altitude_std_dev = 100):
+    def __init__(self, distance_deviation_scalar = .5, velocity_std_dev = 30, altitude_std_dev = 100, minimum_distance = 0):
 
         self.distance_deviation_scalar = distance_deviation_scalar
         self.velocity_std_dev = velocity_std_dev
         self.altitude_std_dev = altitude_std_dev
+        self.minimum_distance = minimum_distance
     
     def generate(self, force_use_gun: Union[str, None] = None) -> Dict[str, float]:
 
@@ -67,6 +68,8 @@ class RandomStateGenerator:
 
         wind_velocity           = random_wind()
         wind_direction          = random_heading()
+
+        target_distance += self.minimum_distance
 
         t_x = target_distance * math.cos(math.radians(heading))
         t_y = target_altitude

@@ -53,6 +53,7 @@ if __name__ == '__main__':
     distance_deviation_scalar = float(config['Params']['distance_deviation_scalar'])
     velocity_std_dev = float(config['Params']['velocity_std_dev'])
     altitude_std_dev = float(config['Params']['altitude_std_dev'])
+    minimum_distance = float(config['Params']['minimum_distance'])
 
     learning_rate = float(config['Descent']['learning_rate'])
     tolerance = float(config['Descent']['tolerance'])
@@ -67,7 +68,8 @@ if __name__ == '__main__':
     state_generator = RandomStateGenerator(
         distance_deviation_scalar = distance_deviation_scalar, 
         velocity_std_dev = velocity_std_dev, 
-        altitude_std_dev = altitude_std_dev
+        altitude_std_dev = altitude_std_dev,
+        minimum_distance = minimum_distance
     )
 
     progress_bar = tqdm.tqdm(total = amount)
