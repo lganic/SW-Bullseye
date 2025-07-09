@@ -48,18 +48,18 @@ if __name__ == '__main__':
     if gun == 'All':
         gun = None
 
-    amount = int(config['Params']['amount'])
+    amount = config.getint('Params', 'amount')
 
-    output_path = config['Params']['output_path']
+    output_path = config.get('Params', 'output_path')
 
-    distance_deviation_scalar = float(config['Params']['distance_deviation_scalar'])
-    velocity_std_dev = float(config['Params']['velocity_std_dev'])
-    altitude_std_dev = float(config['Params']['altitude_std_dev'])
-    minimum_distance = float(config['Params']['minimum_distance'])
+    distance_deviation_scalar = config.getfloat('Params', 'distance_deviation_scalar')
+    velocity_std_dev = config.getfloat('Params', 'velocity_std_dev')
+    altitude_std_dev = config.getfloat('Params', 'altitude_std_dev')
+    minimum_distance = config.getfloat('Params', 'minimum_distance')
 
-    learning_rate = float(config['Descent']['learning_rate'])
-    tolerance = float(config['Descent']['tolerance'])
-    max_iterations = float(config['Descent']['max_iterations'])
+    learning_rate = config.getfloat('Descent', 'learning_rate')
+    tolerance = config.getfloat('Descent', 'tolerance')
+    max_iterations = config.getfloat('Descent', 'max_iterations')
 
     check_empty_or_clear_prompt(output_path)
 
