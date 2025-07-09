@@ -1,5 +1,5 @@
 from random import random, normalvariate, choice
-from typing import Dict
+from typing import Dict, Union
 import math
 
 from .tables import GUNS, MUZZLE_VELOCITY, PROJECTILE_DRAG, GRAVITY, APPROX_MAX_DISTANCE
@@ -40,7 +40,7 @@ class RandomStateGenerator:
         self.velocity_std_dev = velocity_std_dev
         self.altitude_std_dev = altitude_std_dev
     
-    def generate(self, force_use_gun = None) -> Dict[str, float]:
+    def generate(self, force_use_gun: Union[str, None] = None) -> Dict[str, float]:
 
         if force_use_gun is None:
             gun_in_use              = choice(GUNS)
