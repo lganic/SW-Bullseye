@@ -8,7 +8,9 @@ import tqdm
 from simulator.random_state_generator import RandomStateGenerator
 from simulator.descent import calculate_firing_solution
 
-CONFIG_PATH = 'generation_params.conf'
+CONFIG_NAME = '../generation_params.conf'
+
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), CONFIG_NAME)
 
 def check_empty_or_clear_prompt(path):
 
