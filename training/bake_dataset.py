@@ -17,7 +17,10 @@ def process_files(files_list, dataset_path, csv_name, baker: Baker):
 
         full_path = os.path.join(dataset_path, file)
 
-        rows.append(baker.bake_file(full_path))
+        try:
+            rows.append(baker.bake_file(full_path))
+        except:
+            pass
     
     df = pd.DataFrame(rows)
     df.to_csv(csv_name, index=False)

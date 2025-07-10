@@ -7,12 +7,12 @@ from training.bake_sample import Baker
 from data_generation.simulator.sim import generate_forward_ballistics, offset_target_position
 
 # Initialize model and load weights
-model = FlexibleMLP(input_size=15, hidden_layers=[32, 16, 8], output_size=3)
+model = FlexibleMLP(input_size=15, hidden_layers=[24, 48, 24, 12], output_size=3)
 model.load_state_dict(torch.load("best_model.pth"))
 model.eval()
 
 testing_directory = 'test_database'
-file_path = os.path.join(testing_directory, os.listdir(testing_directory)[0])
+file_path = os.path.join(testing_directory, os.listdir(testing_directory)[2])
 
 with open(file_path, 'r') as f:
     data = json.load(f)

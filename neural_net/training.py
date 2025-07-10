@@ -52,8 +52,6 @@ def train_model(
         avg_train_loss = np.mean(train_losses)
         avg_val_loss = np.mean(val_losses)
 
-        print(f"Epoch {epoch+1}: Train Loss = {avg_train_loss:.4f}, Val Loss = {avg_val_loss:.4f}")
-
         # Early stopping
         if avg_val_loss < best_val_loss:
             best_val_loss = avg_val_loss
@@ -64,6 +62,12 @@ def train_model(
             if epochs_no_improve >= patience:
                 print(f"Early stopping at epoch {epoch+1}")
                 break
+
+        e_string = ''
+        if epochs_no_improve > 0:
+            e_string = str(epochs_no_improve)
+
+        print(f"Epoch {epoch+1}: Train Loss = {avg_train_loss:.4f}, Val Loss = {avg_val_loss:.4f}", e_string)
 
     torch.save(best_model_state, 'best_model.pth')
 

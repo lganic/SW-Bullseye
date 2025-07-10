@@ -143,4 +143,14 @@ class Baker:
         return row
 
 
-        
+    def reverse_bake(self, input_row, output_az, output_el, output_time):
+
+        solution_az = map_to_degrees(output_az)
+        solution_el = map_to_radians(output_el)
+        solution_time = map_single_field_from_nn(output_time, self.time_scalar)
+
+        print(solution_az)
+        solution_az += input_row['heading']
+        solution_az = math.radians(solution_az)
+
+        return solution_az, solution_el, solution_time

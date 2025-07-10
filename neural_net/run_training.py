@@ -7,14 +7,14 @@ from loader import BallisticsDataset
 train_dataset = BallisticsDataset("training_files/train.csv")
 val_dataset   = BallisticsDataset("training_files/val.csv")
 
-model = FlexibleMLP(input_size=15, hidden_layers=[32, 16, 8], output_size=3)
+model = FlexibleMLP(input_size=15, hidden_layers=[24, 48, 24, 12], output_size=3)
 
 trained_model = train_model(
     model,
     train_dataset,
     val_dataset,
-    batch_size=32,
-    lr=1e-3,
-    max_epochs=100,
+    batch_size=128,
+    lr=1e-6,
+    max_epochs=1000000,
     patience=5
 )
