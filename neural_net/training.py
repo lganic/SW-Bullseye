@@ -65,6 +65,8 @@ def train_model(
                 print(f"Early stopping at epoch {epoch+1}")
                 break
 
+    torch.save(best_model_state, 'best_model.pth')
+
     # Restore best weights
     if best_model_state:
         model.load_state_dict(best_model_state)
