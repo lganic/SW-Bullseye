@@ -1,10 +1,10 @@
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 import pandas as pd
 
 class BallisticsDataset(Dataset):
     def __init__(self, csv_file, input_cols=None, output_cols=None, transform=None):
-        self.data = pd.read_csv(csv_file)
+        df = pd.read_csv(csv_file)
         
         self.input_cols = input_cols or [
             'target_distance','target_altitude','target_velocity',
@@ -17,13 +17,15 @@ class BallisticsDataset(Dataset):
         self.output_cols = output_cols or ['solution_az', 'solution_el', 'solution_time']
         self.transform = transform
 
+        self.inputs = torch.tensor(df[self.input_cols].values, dtype=torch.float32)
+        self.outputs = torch.tensor(df[self.output_cols].values, dtype=torch.float32)
+
     def __len__(self):
-        return len(self.data)
+        return len(self.inputs)
 
     def __getitem__(self, idx):
-        inputs = torch.tensor(self.data.loc[idx, self.input_cols].values, dtype=torch.float32)
-        outputs = torch.tensor(self.data.loc[idx, self.output_cols].values, dtype=torch.float32)
-
+        x = self.inputs[idx]
+        y = self.outputs[idx]
         if self.transform:
-            inputs = self.transform(inputs)
-        return inputs, outputs
+            x = self.transform(x)
+        return x, y
