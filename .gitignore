@@ -1,3 +1,4 @@
 *.pyc
 database/*
+test_database/*
 training_files/*

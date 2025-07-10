@@ -1,16 +1,27 @@
-import pandas as pd
+import os
+import json
+import math
 import torch
 from neural_net.model import FlexibleMLP
+from training.bake_sample import Baker
+from data_generation.simulator.sim import generate_forward_ballistics, offset_target_position
 
+# Initialize model and load weights
 model = FlexibleMLP(input_size=15, hidden_layers=[32, 16, 8], output_size=3)
-model.load_state_dict(torch.load("best-model.pth"))
-model.eval()  # sets dropout/batchnorm to eval mode
+model.load_state_dict(torch.load("best_model.pth"))
+model.eval()
 
-# Load test CSV and pick one row
-df = pd.read_csv("test.csv")
-example_row = df.iloc[0]
+testing_directory = 'test_database'
+file_path = os.path.join(testing_directory, os.listdir(testing_directory)[0])
 
-# Separate input and expected output
+with open(file_path, 'r') as f:
+    data = json.load(f)
+
+# Initialize baker and generate a single test row
+b = Baker()
+row = b.bake_file(file_path)  # Replace with actual path
+
+# Define input/output columns
 input_cols = [
     'target_distance','target_altitude','target_velocity',
     'my_velocity','projectile_velocity','projectile_drag',
@@ -19,22 +30,40 @@ input_cols = [
     'my_velocity_heading_x','my_velocity_heading_y',
     'wind_heading_x','wind_heading_y','wind_velocity'
 ]
-
 output_cols = ['solution_az', 'solution_el', 'solution_time']
 
-x = torch.tensor(example_row[input_cols].values, dtype=torch.float32).unsqueeze(0)  # shape: [1, 15]
+# Convert input to tensor
+x = torch.tensor([row[col] for col in input_cols], dtype=torch.float32).unsqueeze(0)
 
-# Send to model device
+# Move to device
 device = next(model.parameters()).device
 x = x.to(device)
 
-# Make prediction
-model.eval()
+# Run inference
 with torch.no_grad():
     y_pred = model(x).cpu().numpy().flatten()
 
 print("Predicted:", y_pred)
 
-# Optional: Compare to ground truth
-y_true = example_row[output_cols].values
-print("Actual:   ", y_true)
+solution_az, solution_el, solution_time = y_pred
+actual_solution = b.reverse_bake(data, solution_az, solution_el, solution_time)
+
+print("Decompiled:", actual_solution)
+
+print("Simualting ballistics...")
+position = generate_forward_ballistics(data, *actual_solution)
+
+
+print(f'Simulated position: {position}')
+
+offset_position = offset_target_position(data, actual_solution[2])
+
+x, y, z = data['target']
+x += offset_position[0]
+z += offset_position[1]
+
+print(f'Actual position at predicted impact time: {x},{y},{z}')
+
+d = math.sqrt(sum([math.pow(a - b, 2) for a, b in zip(position, (x, y, z))]))
+
+print(f'Distance: {d}')
