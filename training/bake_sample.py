@@ -119,6 +119,9 @@ class Baker:
         processed_solution_el   = map_from_radians(solution_el)
         processed_solution_time = map_single_field_to_nn(solution_time, self.time_scalar)
 
+        processed_solution_az = map_single_field_to_nn(processed_solution_az, 1 / 100)
+        processed_solution_el = map_single_field_to_nn(processed_solution_el, 1 / 100)
+
         row = {
             "target_distance": processed_target_distance,
             "target_altitude": processed_target_altitude,
@@ -144,6 +147,9 @@ class Baker:
 
 
     def reverse_bake(self, input_row, output_az, output_el, output_time):
+
+        output_az = map_single_field_from_nn(output_az, 1 / 100)
+        output_el = map_single_field_from_nn(output_el, 1 / 100)
 
         solution_az = map_to_degrees(output_az)
         solution_el = map_to_radians(output_el)

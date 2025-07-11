@@ -7,7 +7,7 @@ from loader import BallisticsDataset
 train_dataset = BallisticsDataset("training_files/train.csv")
 val_dataset   = BallisticsDataset("training_files/val.csv")
 
-model = FlexibleMLP(input_size=15, hidden_layers=[24, 48, 24, 12], output_size=3)
+model = FlexibleMLP(input_size=15, hidden_layers=[24, 48, 24, 12], output_size=2)
 
 trained_model = train_model(
     model,

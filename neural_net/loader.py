@@ -14,7 +14,7 @@ class BallisticsDataset(Dataset):
             'my_velocity_heading_x','my_velocity_heading_y',
             'wind_heading_x','wind_heading_y','wind_velocity'
         ]
-        self.output_cols = output_cols or ['solution_az', 'solution_el', 'solution_time']
+        self.output_cols = output_cols or ['solution_az', 'solution_el']#, 'solution_time']
         self.transform = transform
 
         self.inputs = torch.tensor(df[self.input_cols].values, dtype=torch.float32)
