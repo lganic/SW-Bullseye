@@ -19,6 +19,8 @@ def process_files(files_list, dataset_path, csv_name, baker: Baker):
 
         try:
             rows.append(baker.bake_file(full_path))
+        except OverflowError as e:
+            raise e
         except:
             pass
     

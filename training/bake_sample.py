@@ -12,10 +12,10 @@ CONFIG_PATH = os.path.join(os.path.dirname(__file__), CONFIG_NAME)
 def map_single_field_to_nn(value, scale):
 
     if value < -scale:
-        raise ValueError(f'Attempt to encode value less than expected bounds: {value} < {-scale}')
+        raise OverflowError(f'Attempt to encode value less than expected bounds: {value} < {-scale}')
     
     if value > scale:
-        raise ValueError(f'Attempt to encode value greated than expected bounds: {value} > {scale}')
+        raise OverflowError(f'Attempt to encode value greated than expected bounds: {value} > {scale}')
 
     return value / scale
 
@@ -25,10 +25,10 @@ def map_single_field_from_nn(value, scale):
 
     # maybe remove these checks later? Not sure if they are really required.
     if value < -1:
-        raise ValueError(f'Attempt to decode value less than expected bounds: {value} < -1')
+        raise OverflowError(f'Attempt to decode value less than expected bounds: {value} < -1')
     
     if value > 1:
-        raise ValueError(f'Attempt to decode value greater than expected bounds: {value} > 1')
+        raise OverflowError(f'Attempt to decode value greater than expected bounds: {value} > 1')
 
     return value * scale
 
@@ -77,6 +77,8 @@ class Baker:
         self.muzzle_velocity_scalar = config.getfloat('Scalars', 'muzzle_velocity_scalar')
         self.projectile_drag_scalar = config.getfloat('Scalars', 'projectile_drag_scalar')
         self.time_scalar            = config.getfloat('Scalars', 'time_scalar')
+        self.az_angle_upscaler      = config.getfloat('Scalars', 'az_angle_upscaler')
+        self.el_angle_upscaler      = config.getfloat('Scalars', 'el_angle_upscaler')
     
     def bake_file(self, file_path: str):
 
@@ -119,8 +121,8 @@ class Baker:
         processed_solution_el   = map_from_radians(solution_el)
         processed_solution_time = map_single_field_to_nn(solution_time, self.time_scalar)
 
-        processed_solution_az = map_single_field_to_nn(processed_solution_az, 1 / 100)
-        processed_solution_el = map_single_field_to_nn(processed_solution_el, 1 / 100)
+        processed_solution_az = map_single_field_to_nn(processed_solution_az, 1 / self.az_angle_upscaler)
+        processed_solution_el = map_single_field_to_nn(processed_solution_el, 1 / self.el_angle_upscaler)
 
         row = {
             "target_distance": processed_target_distance,
@@ -146,17 +148,16 @@ class Baker:
         return row
 
 
-    def reverse_bake(self, input_row, output_az, output_el, output_time):
+    def reverse_bake(self, input_row, output_az, output_el):
 
-        output_az = map_single_field_from_nn(output_az, 1 / 100)
-        output_el = map_single_field_from_nn(output_el, 1 / 100)
+        output_az = map_single_field_from_nn(output_az, 1 / self.az_angle_upscaler)
+        output_el = map_single_field_from_nn(output_el, 1 / self.el_angle_upscaler)
 
         solution_az = map_to_degrees(output_az)
         solution_el = map_to_radians(output_el)
-        solution_time = map_single_field_from_nn(output_time, self.time_scalar)
+        # solution_time = map_single_field_from_nn(output_time, self.time_scalar)
 
-        print(solution_az)
         solution_az += input_row['heading']
         solution_az = math.radians(solution_az)
 
-        return solution_az, solution_el, solution_time
+        return solution_az, solution_el
