@@ -46,7 +46,7 @@ class RandomStateGenerator:
         if force_use_gun is None:
             gun_in_use              = choice(GUNS)
         else:
-            if force_use_gun not in choice:
+            if force_use_gun not in GUNS:
                 raise KeyError(f'Selected gun is not valid. Valid choices are: {",".join(GUNS)}')
             
             gun_in_use = force_use_gun
