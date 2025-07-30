@@ -14,6 +14,13 @@ class BallisticsDataset(Dataset):
             'my_velocity_heading_x','my_velocity_heading_y',
             'wind_heading_x','wind_heading_y','wind_velocity'
         ]
+        # self.input_cols = input_cols or [
+        #     'target_distance','target_altitude','target_velocity',
+        #     'my_velocity', 'target_heading_x','target_heading_y',
+        #     'target_velocity_heading_x','target_velocity_heading_y',
+        #     'my_velocity_heading_x','my_velocity_heading_y',
+        #     'wind_heading_x','wind_heading_y','wind_velocity'
+        # ]
         self.output_cols = output_cols or ['solution_az', 'solution_el']#, 'solution_time']
         self.transform = transform
 

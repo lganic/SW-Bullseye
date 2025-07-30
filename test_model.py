@@ -5,8 +5,9 @@ import torch
 from neural_net.model import FlexibleMLP
 from training.bake_sample import Baker
 from data_generation.simulator.sim import generate_forward_ballistics, offset_target_position
+from tqdm import tqdm
 
-def find_best_launch_time(state, az, el, min_time = 0, max_time = 1000, tolerance = .1):
+def find_best_launch_time(state, az, el, min_time = 0, max_time = 1000, tolerance = .01):
 
     # Given an azimuth, an elevation, and a firing state, find the time of impact which minizmizes the distance
     target_position = state['target']
@@ -44,7 +45,8 @@ def find_best_launch_time(state, az, el, min_time = 0, max_time = 1000, toleranc
     
 
 # Initialize model and load weights
-model = FlexibleMLP(input_size=15, hidden_layers=[25, 48, 35, 25, 16, 8], output_size=2)
+model = FlexibleMLP(input_size=15, hidden_layers=[35, 45, 55, 45, 25,  15, 6], output_size=2)
+# model = FlexibleMLP(input_size=13, hidden_layers=[20, 25, 35, 20, 14,  8, 4], output_size=2)
 model.load_state_dict(torch.load("best_model.pth"))
 model.eval()
 
@@ -57,7 +59,7 @@ b = Baker()
 total = 0
 amount = 0
 
-for file_path in file_paths:
+for file_path in tqdm(file_paths, desc = 'Processing...'):
 
     file_path = os.path.join(testing_directory, file_path)
 
