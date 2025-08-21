@@ -56,7 +56,7 @@ ax = fig.add_subplot(111, projection='3d')
 
 for x, y, z, u, v, w, flag in zip(x_points, y_points, z_points, x_delta, y_delta, z_delta, flags):
     color = 'red' if flag else 'blue'
-    ax.quiver(x, z, y, u, w, v, color=color, length=100, normalize=True)
+    ax.quiver(x, z, y, u, w, v, color=color)#, length=100, normalize=True)
 
 ax.set_xlabel('X')
 ax.set_ylabel('Z')

@@ -59,7 +59,9 @@ def calculate_firing_solution(firing_state: Dict[str, float], learning_rate = .0
 
     _vprint(verbose, f'Calculating solution for: {firing_state["gun_name"]}')
 
-    current_guess = calculate_inital_guess(firing_state)
+    starting_guess = calculate_inital_guess(firing_state)
+
+    current_guess = starting_guess
 
     _vprint(verbose, f'Starting error: {calculate_error(firing_state, current_guess)}')
 
@@ -119,4 +121,7 @@ def calculate_firing_solution(firing_state: Dict[str, float], learning_rate = .0
 
         _vprint(verbose, f'Current error: {error} @ {current_guess}, Iterations: {count}')
     
+    if abs(current_guess[0] - starting_guess[0]) > 1 or abs(current_guess[1] - starting_guess[1]) > 1 or current_guess[2] < 0:
+        return # This solution probably got to a weird section in the gradient, and should be ignored.
+
     return current_guess

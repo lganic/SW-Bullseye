@@ -99,7 +99,8 @@ class Baker:
         projectile_velocity     = data['muzzle_velocity']
         projectile_drag         = data['projectile_drag']
 
-        solution_az             = math.degrees(data['solution_az']) - target_heading
+        solution_az             = math.degrees(data['solution_az'])# - target_heading
+        solution_az_x, solution_az_y = dual_axis_angle_encoding(solution_az)
         solution_el             = data['solution_el']
         solution_time           = data['solution_time']
 
@@ -141,23 +142,27 @@ class Baker:
             "wind_heading_y": processed_wind_heading_y,
             "wind_velocity": processed_wind_velocity,
             "solution_az": processed_solution_az,
+            "solution_az_x": solution_az_x,
+            "solution_az_y": solution_az_y,
             "solution_el": processed_solution_el,
             "solution_time": processed_solution_time
         }
 
         return row
 
+    def reverse_bake(self, input_row, output_az_x, output_az_y, output_el):
 
-    def reverse_bake(self, input_row, output_az, output_el):
+        # output_az = map_single_field_from_nn(output_az, 1 / self.az_angle_upscaler)
 
-        output_az = map_single_field_from_nn(output_az, 1 / self.az_angle_upscaler)
+        output_az = math.atan2(output_az_y, output_az_x)
+
         output_el = map_single_field_from_nn(output_el, 1 / self.el_angle_upscaler)
 
-        solution_az = map_to_degrees(output_az)
+        # solution_az = map_to_degrees(output_az)
         solution_el = map_to_radians(output_el)
         # solution_time = map_single_field_from_nn(output_time, self.time_scalar)
 
-        solution_az += input_row['heading']
-        solution_az = math.radians(solution_az)
+        # solution_az += input_row['heading']
+        # solution_az = math.radians(solution_az)
 
-        return solution_az, solution_el
+        return output_az, solution_el

@@ -13,7 +13,6 @@ def random_heading() -> float:
 
 def random_velocity(std_dev: float) -> float:
     # Return a random velocity of a target
-
     return abs(normalvariate(0, std_dev))
 
 def random_altitude(std_dev: float) -> float:
@@ -54,7 +53,7 @@ class RandomStateGenerator:
         muzzle_velocity         = MUZZLE_VELOCITY[gun_in_use]
         projectile_drag         = PROJECTILE_DRAG[gun_in_use]
         gravity                 = GRAVITY[gun_in_use]
-        max_distance            = APPROX_MAX_DISTANCE[gun_in_use]
+        max_distance            = APPROX_MAX_DISTANCE[gun_in_use] / 2
 
         heading                 = random_heading()
         target_velocity_heading = random_heading()
